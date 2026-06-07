@@ -96,7 +96,7 @@ export function formatBill(items) {
    if (!Array.isArray(items) || items.length === 0) {
     return "";
   }
-  return items.map(p => `${p.name} x ${p.qty} = Rs.${p.price*p.qty}`).join("\n");
+  return items.map(p => `${p.name} x ${p.qty}  = Rs.${p.price*p.qty}`).join("\n");
   
   // Your code here
 }

@@ -53,17 +53,61 @@
  *   // => "RAJASTHANI THALI (Veg) - Items: dal - Rs.250.00"
  */
 export function createThaliDescription(thali) {
+  if(typeof thali !== "object" || thali === null) return "";
+
+  const { name, items, price, isVeg} = thali;
+  if (
+    typeof name !== "string" ||
+    !Array.isArray(items) ||
+    typeof price !== "number" ||
+    typeof isVeg !== "boolean"
+  ) return "";
+  const vegStatus = isVeg ? "Veg" : "Non-Veg";
+
+
+  return `${name.toUpperCase()} (${vegStatus}) - Items: ${items.join(", ")} - Rs.${price.toFixed(2)}`
   // Your code here
 }
 
 export function getThaliStats(thalis) {
+  if(!Array.isArray(thalis) || thalis.length ===0){
+    return null;
+  }
+   const totalThalis = thalis.length;
+   const vegCount = thalis.filter(p => p.isVeg).length;
+   const nonVegCount = thalis.filter(p =>!p.isVeg).length;
+   const avgPrice = (thalis.reduce((acum,t) => acum+t.price ,0)/thalis.length).toFixed(2);
+   const cheapest = Math.min(...thalis.map(t => t.price));
+   const costliest = Math.max(...thalis.map(t => t.price));
+   const names = thalis.map(p => p.name)
+    return { totalThalis, vegCount, nonVegCount, avgPrice, cheapest, costliest, names };
+
+   }
+  
   // Your code here
-}
+
 
 export function searchThaliMenu(thalis, query) {
-  // Your code here
+  if(!Array.isArray(thalis) || typeof query !== "string"){
+    return [];
+  }
+ return thalis.filter(t =>
+    t.name.toLowerCase().includes(query.toLowerCase()) ||
+    t.items.some(item => item.toLowerCase().includes(query.toLowerCase()))
+  );
 }
 
 export function generateThaliReceipt(customerName, thalis) {
+  if (typeof customerName !== "string" || !Array.isArray(thalis) || thalis.length === 0) {
+    return "";
+  }
+
+  const lineItems = thalis
+    .map(t => `- ${t.name} x Rs.${t.price}`)
+    .join("\n");
+    const total = thalis.reduce((acc, t) => acc + t.price, 0);
+
+    return `THALI RECEIPT\n---\nCustomer: ${customerName.toUpperCase()}\n${lineItems}\n---\nTotal: Rs.${total}\nItems: ${thalis.length}`
+
   // Your code here
 }
